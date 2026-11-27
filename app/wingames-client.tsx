@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, ArrowDownLeft, ArrowUpRight, Banknote, Boxes, Building2, Check, ChevronDown, CircleHelp, FileSpreadsheet, Gamepad2, LayoutDashboard, Menu, Printer, QrCode, Search, Settings, ShieldCheck, Smartphone, Upload, Users, X } from 'lucide-react';
 
