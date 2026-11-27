@@ -56,7 +56,7 @@ async function createSession(userId: string, deviceId: string | null) {
 async function passwordHash(password: string, salt?: Uint8Array) {
   const saltBytes = salt || crypto.getRandomValues(new Uint8Array(16));
   const material = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: saltBytes, iterations: 160_000 }, material, 256);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: saltBytes, iterations: 100_000 }, material, 256);
   return { salt: base64url(saltBytes), hash: base64url(new Uint8Array(bits)) };
 }
 const fromB64 = (value: string) => new Uint8Array(atob(value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length / 4) * 4, "=")).split("").map((c) => c.charCodeAt(0)));
