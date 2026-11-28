@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -36,3 +36,13 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+      - name: Publish stable public APK download
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-alpha
+          name: WinGames Android Alpha
+          body: Installable Android alpha build. Download app-debug.apk and install it on an Android device.
+          prerelease: true
+          make_latest: false
+          overwrite_files: true
+          files: android/app/build/outputs/apk/debug/app-debug.apk
