@@ -99,7 +99,87 @@ export const localProfiles = sqliteTable("local_profiles", {
   email: text("email").notNull().default(""),
   pec: text("pec").notNull().default(""),
   notes: text("notes").notNull().default(""),
+  retePercent: real("rete_percent").notNull().default(1),
+  exercisePercent: real("exercise_percent").notNull().default(50),
   updatedAt: text("updated_at").notNull(),
+});
+
+export const collectionVisits = sqliteTable("collection_visits", {
+  id: text("id").primaryKey(),
+  localKey: text("local_key").notNull(),
+  local: text("local").notNull(),
+  status: text("status").notNull().default("open"),
+  paymentMethod: text("payment_method").notNull().default("cash"),
+  businessDay: text("business_day").notNull(),
+  startedAt: text("started_at").notNull(),
+  closedAt: text("closed_at"),
+  collectorId: text("collector_id").notNull().references(() => users.id),
+  collectorName: text("collector_name").notNull(),
+  deposits: real("deposits").notNull().default(0),
+  totalsJson: text("totals_json").notNull().default("{}"),
+  cancelledAt: text("cancelled_at"),
+  cancelledBy: text("cancelled_by"),
+});
+
+export const machineCollections = sqliteTable("machine_collections", {
+  id: text("id").primaryKey(),
+  visitId: text("visit_id").notNull().references(() => collectionVisits.id),
+  machineId: text("machine_id").notNull(),
+  model: text("model").notNull().default(""),
+  partialIn: real("partial_in").notNull(),
+  partialOut: real("partial_out").notNull(),
+  globalIn: real("global_in").notNull(),
+  globalOut: real("global_out").notNull(),
+  manualCounters: integer("manual_counters").notNull().default(0),
+  drawer: real("drawer").notNull(),
+  taxes: real("taxes").notNull(),
+  netDrawer: real("net_drawer").notNull(),
+  managerShare: real("manager_share").notNull(),
+  exerciseShare: real("exercise_share").notNull(),
+  serviceShare: real("service_share").notNull().default(0),
+  createdAt: text("created_at").notNull(),
+});
+
+export const alerts = sqliteTable("alerts", {
+  id: text("id").primaryKey(),
+  kind: text("kind").notNull(),
+  message: text("message").notNull(),
+  localKey: text("local_key").notNull().default(""),
+  machineId: text("machine_id").notNull().default(""),
+  createdBy: text("created_by").notNull().references(() => users.id),
+  createdByName: text("created_by_name").notNull(),
+  createdAt: text("created_at").notNull(),
+  resolvedAt: text("resolved_at"),
+});
+
+export const fieldNotes = sqliteTable("field_notes", {
+  id: text("id").primaryKey(),
+  kind: text("kind").notNull(),
+  localKey: text("local_key").notNull(),
+  machineId: text("machine_id").notNull().default(""),
+  body: text("body").notNull(),
+  createdBy: text("created_by").notNull().references(() => users.id),
+  createdByName: text("created_by_name").notNull(),
+  createdAt: text("created_at").notNull(),
+  resolvedAt: text("resolved_at"),
+});
+
+export const fieldMessages = sqliteTable("field_messages", {
+  id: text("id").primaryKey(),
+  body: text("body").notNull(),
+  createdBy: text("created_by").notNull().references(() => users.id),
+  createdByName: text("created_by_name").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
+export const dayClosings = sqliteTable("day_closings", {
+  id: text("id").primaryKey(),
+  day: text("day").notNull(),
+  status: text("status").notNull().default("closed"),
+  closedAt: text("closed_at").notNull(),
+  closedBy: text("closed_by").notNull().references(() => users.id),
+  closedByName: text("closed_by_name").notNull(),
+  totalsJson: text("totals_json").notNull().default("{}"),
 });
 
 export const machines = sqliteTable("machines", {
