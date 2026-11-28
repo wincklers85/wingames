@@ -79,7 +79,10 @@ public class MainActivity extends Activity {
     }
     @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
-        if (requestCode == REQUEST_BT && webView != null) webView.evaluateJavascript("window.dispatchEvent(new Event('wg-bluetooth-ready'))", null);
+        if (requestCode == REQUEST_BT && webView != null) {
+            if (hasBluetoothPermission()) webView.evaluateJavascript("window.dispatchEvent(new Event('wg-bluetooth-ready'))", null);
+            else Toast.makeText(this, "Consenti il Bluetooth per selezionare la NETUM.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private class PrinterBridge {
@@ -152,6 +155,10 @@ public class MainActivity extends Activity {
 
     @Override public void onBackPressed() {
         if (webView != null && webView.canGoBack()) webView.goBack(); else super.onBackPressed();
+    }
+    @Override protected void onResume() {
+        super.onResume();
+        if (webView != null) webView.post(() -> webView.evaluateJavascript("window.dispatchEvent(new Event('wg-app-resumed'))", null));
     }
     @Override protected void onDestroy() { if (webView != null) { webView.removeJavascriptInterface("WinGamesPrinter"); webView.destroy(); } super.onDestroy(); }
 }
